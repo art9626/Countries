@@ -3,22 +3,22 @@ import styled from 'styled-components';
 import Flex from './Flex';
 
 
-const StyledError = styled(Flex)`
+const StyleEmptyResult = styled(Flex)`
   height: 50px;
-  background-color: var(--error);
-  color: white;
+  background-color: var(--colors-ui-base);
+  color: var(--colors-text);
   border-radius: 5px;
   font-style: italic;
 `
 
-export const Error: React.FC = ({ children }) => {
+export const EmptyResult: React.FC = ({ children }) => {
   return (
-    <StyledError
+    <StyleEmptyResult
       justifyContent='center'
       alignItems='center'
       width='100%'
     >
-      {children}
-    </StyledError>
+      Empty result
+    </StyleEmptyResult>
   );
 };

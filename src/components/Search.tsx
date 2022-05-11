@@ -64,7 +64,7 @@ const Search: React.FC = React.memo(() => {
         newSearchParams.search = search;
 
         setSearchParams(newSearchParams);
-      }, 1000)
+      }, 300)
     } else {
       
       let newSearchParams: SearchParamsType = {};

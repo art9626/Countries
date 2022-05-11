@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadCountries } from '../redux/countries/countriesActions';
 import { getError, getFiltredCountries, getIsLoading } from '../redux/countries/countriesSelectors';
+import { EmptyResult } from '../UI/EmptyResult';
 import { Error } from '../UI/Error';
 import Flex from '../UI/Flex';
 import CountryItem from './CountryItem';
@@ -20,6 +21,11 @@ export const CountriesList: React.FC = React.memo(() => {
     dispatch(loadCountries());
   }, [dispatch])
 
+  if (countries.length === 0 && !isLoading && !error) {
+    return (
+      <EmptyResult />
+    );
+  }
 
   return (
     <>

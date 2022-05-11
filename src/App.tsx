@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import './App.css';
 import Loyout from './components/Loyout';
 
 const MainPage = React.lazy(() => import('./pages/MainPage'));
