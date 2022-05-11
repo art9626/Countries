@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { IoSearch } from 'react-icons/io5';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { filtersActions } from '../redux/filters/filtersActions';
-import { getFilters } from '../redux/filters/filtersSelectors';
+import { SearchParamsType } from '../pages/MainPage';
 import Flex from '../UI/Flex';
 
 const InputContainer = styled.div`
@@ -46,33 +45,45 @@ const StyledInput = styled.input`
 
 
 const Search: React.FC = React.memo(() => {
-  const dispatch = useDispatch();
-  const filters = useSelector(getFilters);
-  const [search, setSearch] = useState(filters.search);
-
-  useEffect(() => {
-    if (filters.search !== search) {
-      setSearch(filters.search);
-    }
-  }, [filters.search]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentFilterSearch = searchParams.get('search');
+  const currentFilterRegion = searchParams.get('region');
+  const [search, setSearch] = useState(currentFilterSearch || '');
 
 
   useEffect(() => {
+    if (currentFilterSearch === search) return;
+
     let timerId: NodeJS.Timeout;
-    if (search !== filters.search && search !== null) {
-      if (search.length > 0) {
-        timerId = setTimeout(() => {
-          dispatch(filtersActions.setFilters({ ...filters, search }));
-        }, 300)
-      } else {
-        dispatch(filtersActions.setFilters({ ...filters, search }));
+    if (search.length > 0) {
+      timerId = setTimeout(() => {
+        let newSearchParams: SearchParamsType = {};
+        if (currentFilterRegion) {
+          newSearchParams.region = currentFilterRegion;
+        }
+        newSearchParams.search = search;
+
+        setSearchParams(newSearchParams);
+      }, 1000)
+    } else {
+      
+      let newSearchParams: SearchParamsType = {};
+      if (currentFilterRegion) {
+        newSearchParams.region = currentFilterRegion;
       }
+
+      setSearchParams(newSearchParams);
     }
 
     return () => {
       clearTimeout(timerId);
     }
-  }, [search]);
+  }, [search, setSearchParams]);
+
+  useEffect(() => {
+    if (!currentFilterSearch && search !== '') setSearch('');
+  }, [currentFilterSearch])
+  
 
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

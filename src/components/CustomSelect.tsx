@@ -1,8 +1,7 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import Select, { OnChangeValue, StylesConfig } from 'react-select';
-import { filtersActions } from '../redux/filters/filtersActions';
-import { getFilters } from '../redux/filters/filtersSelectors';
+import { SearchParamsType } from '../pages/MainPage';
 
 
 
@@ -76,22 +75,33 @@ const customStyles: StylesConfig<OptionType> = {
 
 
 const CustomSelect: React.FC = React.memo(() => {
-  const dispatch = useDispatch();
-  const filters = useSelector(getFilters);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentFilterSearch = searchParams.get('search');
+  const currentFilterRegion = searchParams.get('region');
+
 
   const handleChange = (
     newValue: OnChangeValue<OptionType, false>,
   ) => {
-    let newFilter: string;
+    let newFilterRegion: string;
     if (!newValue) {
-      newFilter = '';
+      newFilterRegion = '';
     } else {
-      newFilter = newValue.value;
+      newFilterRegion = newValue.value;
     }
-    dispatch(filtersActions.setFilters({ ...filters, region: newFilter }));
+
+    let newSearchParams: SearchParamsType = {};
+    if (newFilterRegion) {
+      newSearchParams.region = newFilterRegion;
+    }
+    if (currentFilterSearch) {
+      newSearchParams.search = currentFilterSearch;
+    }
+
+    setSearchParams(newSearchParams);
   };
 
-  const currentValue = options.filter((item) => item.value === filters.region)
+  const currentValue = options.filter((item) => item.value === currentFilterRegion)
 
   return (
     <Select

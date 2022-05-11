@@ -1,20 +1,27 @@
-import { CLEAR, FiltersActionsType, SET_FILTERS } from "./filtersActions"
+import { CLEAR, FiltersActionsType, SET_REGION_FILTER, SET_SEARCH_FILTER } from "./filtersActions"
 
 export type FiltersType = {
-  search: null | string;
-  region: null | string;
+  search: string;
+  region: string;
 }
 
 const initialState = {
-  search: null,
-  region: null,
+  search: '',
+  region: '',
 } as FiltersType;
 
 export const filtersReducer = (state = initialState, action: FiltersActionsType) => {
   switch (action.type) {
-    case SET_FILTERS:
+    case SET_SEARCH_FILTER:
       return {
-         ...action.payload,
+        ...state,
+        search: action.payload,
+      }
+
+    case SET_REGION_FILTER:
+      return {
+        ...state,
+        region: action.payload,
       }
 
     case CLEAR:

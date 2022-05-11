@@ -112,10 +112,6 @@ const StyledInfoItem = styled.li`
 `
 
 const CountryItem: React.FC<CountryType> = React.memo(({ name, population, region, capital, flags }) => {
-
-  console.log('item');
-  
-
   return (
     <StyledCountryItem key={name}>
       <CountryFlag width='100%' height='180px' src={flags.png} alt="Flag" />

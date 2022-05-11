@@ -1,3 +1,4 @@
 import { RootStateType } from "../store";
 
-export const getFilters = (state: RootStateType) => state.filters;
+export const getSearchFilter = (state: RootStateType) => state.filters.search;
+export const getRegionFilter = (state: RootStateType) => state.filters.region;

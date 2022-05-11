@@ -1,69 +1,55 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { filtersActions } from '../redux/filters/filtersActions';
-import { getFilters } from '../redux/filters/filtersSelectors';
 import Container from '../UI/Container';
 import Controls from '../components/Controls';
 import { CountriesList } from '../components/CountriesList';
 import { countriesActions } from '../redux/countries/countriesActions';
+import { useSearchParams } from 'react-router-dom';
 
 
 
-type SearchParamsType = {
+export type SearchParamsType = {
   region?: string;
   search?: string;
 }
 
 const MainPage: React.FC = () => {
   const dispatch = useDispatch();
-  const filters = useSelector(getFilters);
-
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchParam = searchParams.get('search') || '';
-  const regionParam = searchParams.get('region') || '';
-
+  
 
   useEffect(() => {
     return () => {
       dispatch(filtersActions.clear());
       dispatch(countriesActions.clear());
     };
-  }, []);
-
-
-  useEffect(() => {
-    if (filters.search !== searchParam || filters.region !== regionParam) {
-      dispatch(filtersActions.setFilters({ search: searchParam, region: regionParam }));
-    }
-  }, [searchParam, regionParam]);
-
+  }, [dispatch]);
 
   useEffect(() => {
-    if (filters.search !== null || filters.region !== null) {
-      if (filters.search !== searchParam || filters.region !== regionParam) {
-        const actualSearchParams: SearchParamsType = {};
-        if (filters.search) actualSearchParams.search = filters.search;
-        if (filters.region) actualSearchParams.region = filters.region;
-        setSearchParams(actualSearchParams);
-      }
+    const currentFilterSearch = searchParams.get('search');
+    const currentFilterRegion = searchParams.get('region');
+
+    if (currentFilterSearch) {
+      dispatch(filtersActions.setSearchFilter(currentFilterSearch));
+    } else {
+      dispatch(filtersActions.setSearchFilter(''));
     }
-  }, [filters]);
+
+    if (currentFilterRegion) {
+      dispatch(filtersActions.setRegionFilter(currentFilterRegion));
+    } else {
+      dispatch(filtersActions.setRegionFilter(''));
+    }
+  }, [searchParams, setSearchParams, dispatch]);
 
 
-  
   return (
     <section>
       <Container maxWidth='1440px'>
-        {
-          filters.search === null || filters.region === null
-            ? null
-            : <>
-                <Controls />
-                <CountriesList />
-              </>
-        }
-            </Container>
+        <Controls />
+        <CountriesList />
+      </Container>
     </section>
   );
 };
